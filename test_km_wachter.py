@@ -1,5 +1,5 @@
 # test_km_wachter.py
-from km_wachter import needs_service
+from km_wachter import needs_service, wear_percent
 
 
 def test_almost_due_car_is_flagged():
@@ -10,3 +10,9 @@ def test_almost_due_car_is_flagged():
 def test_missing_reading_is_not_treated_as_zero():
     # A car with NO last-service reading must not be treated as fully worn.
     assert needs_service({"id": "VOS-7788", "odometer": 92000}) is False
+
+
+def test_wear_percent_is_precise_not_floored():
+    # 14,900 of 15,000 km is about 99.3% worn, not floored down to 0%.
+    pct = wear_percent(14900, 15000)
+    assert 99.0 <= pct <= 99.4
